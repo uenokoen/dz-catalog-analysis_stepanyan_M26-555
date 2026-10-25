@@ -180,3 +180,16 @@ def common_actors(movie1, movie2):
 
 def genres_only_in_one(movies_a, movies_b):
     return all_genres(movies_a) - all_genres(movies_b)
+
+
+# Этап 8. Итераторы и генераторы
+
+
+def iter_high_rated(movies, min_rating=8.0):
+    for movie in movies:
+        if movie["rating"] >= min_rating:
+            yield movie
+
+
+def total_duration_rated_above(movies, min_rating=7):
+    return sum(m["duration_min"] for m in movies if m["rating"] > min_rating)
