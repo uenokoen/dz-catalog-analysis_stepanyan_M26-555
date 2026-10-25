@@ -193,3 +193,76 @@ def iter_high_rated(movies, min_rating=8.0):
 
 def total_duration_rated_above(movies, min_rating=7):
     return sum(m["duration_min"] for m in movies if m["rating"] > min_rating)
+
+
+# Этап 9. Итоговый отчет
+
+
+def build_report(movies):
+    _, _, average_age = catalog_age_stats(movies)
+    top_titles = [title for title, _ in top_n_by_rating(movies, 3)]
+    top_movies = [m for t in top_titles for m in movies if m["title"] == t]
+    genre_counts = sorted(
+        count_by_genre(movies).items(), key=lambda item: (-item[1], item[0])
+    )
+
+    print("ОТЧЕТ ПО КАТАЛОГУ")
+    print(f"Средний рейтинг: {average_rating(movies)}")
+    print(f"Средний возраст фильмов: {average_age} лет")
+    print()
+    print("Топ-3 фильма:")
+    for movie in top_movies:
+        print(f"  {format_report_line(movie)}")
+    print()
+    print("Фильмов по жанрам:")
+    for genre, count in genre_counts:
+        print(f"  {genre} — {count}")
+    print()
+    print(f"Все жанры каталога: {', '.join(sorted(all_genres(movies)))}")
+
+
+def demo_stages(movies):
+    print("=== Этап 1 ===")
+    print(average_rating(movies))
+    print(catalog_age_stats(movies))
+    print(duration_in_hours(155))
+
+    print("\n=== Этап 2 ===")
+    for rating in (9.2, 9.0, 8.9, 7.0, 6.9, 5.0, 4.8):
+        print(rating, rating_tier(rating))
+    for year in (2024, 2021, 2020, 2015, 2014):
+        print(year, decade_label(year))
+
+    print("\n=== Этап 3 ===")
+    print_non_comedies(movies)
+    find_first_masterpiece(movies)
+    find_first_masterpiece(movies[:5])
+    print("Фильмов длиннее 120 минут:", count_long_movies(movies))
+
+    print("\n=== Этап 4 ===")
+    print(normalize_title("silent hours"))
+    print(make_slug("Silent Hours"))
+    print(format_report_line(movies[7]))
+
+    print("\n=== Этап 5 ===")
+    print(titles_sorted_by_rating(movies))
+    print(top_n_by_rating(movies, 3))
+
+    print("\n=== Этап 6 ===")
+    print(count_by_genre(movies))
+    print(actor_filmography(movies))
+    print(above_average_ratings(movies))
+
+    print("\n=== Этап 7 ===")
+    print(all_genres(movies))
+    print(common_actors(movies[0], movies[3]))
+    print(genres_only_in_one(movies[5:6], movies[:5]))
+
+    print("\n=== Этап 8 ===")
+    for movie in iter_high_rated(movies):
+        print(format_report_line(movie))
+    print(total_duration_rated_above(movies))
+
+
+if __name__ == "__main__":
+    build_report(movies)
